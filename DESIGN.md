@@ -152,6 +152,13 @@ Numbered rows that mirror the scene's in-scene steps; the current row is gold-ti
 ### Chart stage and engine
 `CandleChart` draws candles from waypoint-generated OHLC data and animates them printing left to right. Overlays: horizontal lines (optionally draggable, with grip and price tag), zones, callout markers, touch rings, paths (moving averages). Optional ghost mode draws not-yet-printed candles faintly so the full path is hinted.
 
+### Quote slide parts (scene 02)
+- **Lockup:** bull mark and SMISHA wordmark, a thin divider, then "SHARE MARKET CLASSES" in tracked Archivo caps.
+- **Quote:** Source Serif ~420 weight between gold hairline rules with gold quote marks.
+- **Highlight pills:** key words in Source Serif bold italic on soft pills; green (#dce8cc on #012715) and gold (#f8e0b8 on #7a5204). Colours carry meaning: the pill colour matches the data line it explains.
+- **Attribution badge:** slanted emerald plate with a gold right edge, serif name in cream.
+- **Portrait disc:** emerald disc with a gold ring that draws in on entry; the person cut out and overlapping the disc.
+
 ### Trade ticket
 Entry, stop-loss, target, risk, reward and the risk:reward ratio, updating live as lines are dragged.
 

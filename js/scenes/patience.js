@@ -1,146 +1,186 @@
-// Scene 02: Buffett's quote, dramatised. Two investors on the same price path:
-// the patient one holds, the impatient one panic-sells dips and chases rallies.
+// Scene 02: Warren Buffett's quote (client reference layout). The faint gold
+// chart along the bottom is live: each click draws one investor's ₹1,00,000
+// through the same illustrative six years — impatient first, then patient.
 
-import { CandleChart, reducedMotion } from "../candles.js";
-import { candles, simulate, START } from "../lib/patience-sim.js";
+import { reducedMotion } from "../candles.js";
+import { simulate, START } from "../lib/patience-sim.js";
 
-const PALETTE = {
-  bull: "#7fd6a4",
-  bear: "#e8b863",
-  grid: "rgba(253,248,240,0.08)",
-  axis: "rgba(253,248,240,0.5)",
-  bg: "#065a40",
-  paper: "#fdf8f0",
-  muted: "rgba(253,248,240,0.7)",
-};
-const N = candles.length;
-const STOP = [0, N, N];
-
+const GREEN = "#2f7a55";   // impatient: the green highlight
+const GOLD = "#b7852a";    // patient: the gold highlight
 const inr = (v) => "₹" + Math.round(v).toLocaleString("en-IN");
 
 export default {
   id: "patience",
-  title: "Impatient to patient",
+  title: "From the impatient to the patient",
   steps: 3,
 
   init(root) {
     this.root = root;
-    this.lines = [...root.querySelectorAll("[data-qline]")];
-    this.el = {
-      patient: root.querySelector("[data-patient]"),
-      impatient: root.querySelector("[data-impatient]"),
-      trades: root.querySelector("[data-trades]"),
-      gap: root.querySelector("[data-gap]"),
-      gapBar: root.querySelector("[data-gap-bar]"),
-      result: root.querySelector("[data-result]"),
-      panic: root.querySelector("[data-panic]"),
-      panicOut: root.querySelector("[data-panic-out]"),
-      cardP: root.querySelector("[data-card='patient']"),
-      cardI: root.querySelector("[data-card='impatient']"),
-      coins: root.querySelector("[data-coins]"),
-      replay: root.querySelector("[data-replay]"),
+    this.canvas = root.querySelector(".s2-chart");
+    this.ctx = this.canvas.getContext("2d");
+    this.hl = {
+      impatient: root.querySelector('[data-hl="impatient"]'),
+      patient: root.querySelector('[data-hl="patient"]'),
     };
-    this.chart = new CandleChart(root.querySelector(".s2-chart"), {
-      candles,
-      yMin: 80,
-      yMax: 262,
-      gridStep: 40,
-      axis: false,
-      ghost: 0.16,
-      maxBody: 12,
-      palette: PALETTE,
-      pad: { l: 8, r: 8, t: 18, b: 22 },
-    });
-    this.chart.onFrame = (v) => this.updateCounters(v);
-    this.run();
-    this.el.panic.addEventListener("input", () => {
-      this.run();
-      this.chart.draw();
-      this.updateCounters(this.chart.visible);
-      if (this.step === 2) this.showResult(false);
-    });
-    this.el.replay.addEventListener("click", () => {
-      this.chart.visible = 0;
-      this.requestStep && this.requestStep(1);
-    });
+    this.keys = Object.fromEntries([...root.querySelectorAll("[data-key]")].map((el) => [el.dataset.key, el]));
+    this.vals = Object.fromEntries([...root.querySelectorAll("[data-val]")].map((el) => [el.dataset.val, el]));
+    const sim = simulate(0.08);
+    this.series = { impatient: sim.impatient, patient: sim.patient };
+    this.trades = sim.trades;
+    this.n = sim.patient.length;
+    this.progress = { impatient: 0, patient: 0 }; // 0..1 of each line drawn
+    new ResizeObserver(() => this.resize()).observe(this.canvas);
+    this.resize();
   },
 
-  run() {
-    const pct = Number(this.el.panic.value);
-    this.el.panicOut.textContent = `${pct}%`;
-    this.sim = simulate(pct / 100);
-    this.chart.set("trades", {
-      type: "trades",
-      points: this.sim.trades,
-      buy: "#7fd6a4",
-      sell: "#f1cf7c",
-      ring: "rgba(1,40,28,0.9)",
-    });
+  resize() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const { width, height } = this.canvas.getBoundingClientRect();
+    if (!width) return;
+    this.w = width;
+    this.h = height;
+    this.canvas.width = Math.round(width * dpr);
+    this.canvas.height = Math.round(height * dpr);
+    this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    this.draw();
   },
 
-  updateCounters(visible) {
-    const k = Math.max(0, Math.min(N - 1, Math.floor(visible) - 1));
-    const started = visible >= 1;
-    const p = started ? this.sim.patient[k] : START;
-    const im = started ? this.sim.impatient[k] : START;
-    this.el.patient.textContent = inr(p);
-    this.el.impatient.textContent = inr(im);
-    const done = this.sim.trades.filter((t) => t.i < visible - 0.2).length;
-    this.el.trades.textContent = `${done} ${done === 1 ? "trade" : "trades"}`;
+  x(i) { return 6 + (i / (this.n - 1)) * (this.w - 12); },
+  y(v) {
+    const lo = 70000, hi = 260000;
+    return 6 + (1 - (v - lo) / (hi - lo)) * (this.h - 12);
   },
 
-  showResult(animate = true) {
-    const P = this.sim.patient[N - 1];
-    const I = this.sim.impatient[N - 1];
-    const gap = P - I;
-    this.el.gap.textContent = inr(gap);
-    this.el.gapBar.style.setProperty("--share", `${Math.max(0.04, Math.min(1, gap / P))}`);
-    this.el.result.classList.add("is-visible");
-    if (animate) this.flyCoins(Math.min(8, Math.max(3, this.sim.trades.length)));
-  },
+  draw() {
+    const { ctx, w, h } = this;
+    if (!w) return;
+    ctx.clearRect(0, 0, w, h);
 
-  flyCoins(n) {
-    // gold coins travel from the impatient card to the patient card: the money
-    // the impatient trader handed over by selling low and buying back high
-    if (reducedMotion()) return;
-    const box = this.el.coins.getBoundingClientRect();
-    const a = this.el.cardI.getBoundingClientRect();
-    const b = this.el.cardP.getBoundingClientRect();
-    const from = { x: a.left + a.width * 0.5 - box.left, y: a.top + a.height * 0.45 - box.top };
-    const to = { x: b.left + b.width * 0.5 - box.left, y: b.top + b.height * 0.45 - box.top };
-    for (let k = 0; k < n; k++) {
-      const coin = document.createElement("span");
-      coin.className = "s2-coin";
-      this.el.coins.appendChild(coin);
-      const lift = 60 + k * 6;
-      const anim = coin.animate(
-        [
-          { transform: `translate(${from.x}px, ${from.y}px) scale(0.6)`, opacity: 0 },
-          { transform: `translate(${from.x}px, ${from.y - 10}px) scale(1)`, opacity: 1, offset: 0.12 },
-          { transform: `translate(${(from.x + to.x) / 2}px, ${Math.min(from.y, to.y) - lift}px) scale(1.1)`, opacity: 1, offset: 0.55 },
-          { transform: `translate(${to.x}px, ${to.y}px) scale(0.7)`, opacity: 0 },
-        ],
-        { duration: 1100, delay: k * 140, easing: "cubic-bezier(0.33, 0, 0.2, 1)", fill: "backwards" }
-      );
-      anim.onfinish = () => coin.remove();
+    // faint gold grid, as in the reference
+    ctx.strokeStyle = "rgba(183,133,42,0.14)";
+    ctx.lineWidth = 1;
+    const cols = 12, rows = 4;
+    for (let c = 0; c <= cols; c++) {
+      const X = Math.round((c / cols) * w) + 0.5;
+      ctx.beginPath(); ctx.moveTo(X, 0); ctx.lineTo(X, h); ctx.stroke();
     }
+    for (let r = 0; r <= rows; r++) {
+      const Y = Math.round((r / rows) * h) + 0.5;
+      ctx.beginPath(); ctx.moveTo(0, Y); ctx.lineTo(w, Y); ctx.stroke();
+    }
+    // starting line: both begin at ₹1,00,000
+    ctx.setLineDash([4, 5]);
+    ctx.strokeStyle = "rgba(2,45,29,0.25)";
+    ctx.beginPath(); ctx.moveTo(0, this.y(START)); ctx.lineTo(w, this.y(START)); ctx.stroke();
+    ctx.setLineDash([]);
+
+    this.line("impatient", GREEN, true);
+    this.line("patient", GOLD, false);
+  },
+
+  line(key, color, markTrades) {
+    const p = this.progress[key];
+    if (p <= 0) return;
+    const { ctx } = this;
+    const data = this.series[key];
+    const last = p * (this.n - 1);
+    const end = Math.floor(last);
+    ctx.save();
+    ctx.strokeStyle = color;
+    ctx.lineWidth = Math.max(2.5, this.h * 0.022);
+    ctx.lineJoin = ctx.lineCap = "round";
+    ctx.shadowColor = color;
+    ctx.shadowBlur = 8;
+    ctx.beginPath();
+    for (let i = 0; i <= end; i++) {
+      const X = this.x(i), Y = this.y(data[i]);
+      i ? ctx.lineTo(X, Y) : ctx.moveTo(X, Y);
+    }
+    // interpolate the head between monthly points
+    let hx = this.x(end), hy = this.y(data[end]);
+    if (end < this.n - 1) {
+      const f = last - end;
+      hx = this.x(end + f);
+      hy = this.y(data[end] + (data[end + 1] - data[end]) * f);
+      ctx.lineTo(hx, hy);
+    }
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+
+    // the impatient trader's sells (hollow) and buy-backs (filled)
+    if (markTrades) {
+      for (const t of this.trades) {
+        if (t.i > last) continue;
+        const X = this.x(t.i), Y = this.y(data[t.i]);
+        ctx.beginPath();
+        ctx.arc(X, Y, Math.max(3.5, this.h * 0.03), 0, Math.PI * 2);
+        ctx.fillStyle = t.side === "sell" ? "#fdf8f0" : color;
+        ctx.fill();
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      }
+    }
+    // glowing head
+    const g = ctx.createRadialGradient(hx, hy, 0, hx, hy, 14);
+    g.addColorStop(0, "rgba(255,236,170,0.95)");
+    g.addColorStop(1, "rgba(255,236,170,0)");
+    ctx.fillStyle = g;
+    ctx.beginPath(); ctx.arc(hx, hy, 14, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+
+    this.vals[key].textContent = inr(data[Math.min(this.n - 1, Math.round(last))]);
+  },
+
+  animate(target) {
+    cancelAnimationFrame(this.raf);
+    const keys = ["impatient", "patient"];
+    if (reducedMotion()) {
+      keys.forEach((k) => (this.progress[k] = target[k]));
+      this.draw();
+      this.finish();
+      return;
+    }
+    let lastT = performance.now();
+    const tick = (t) => {
+      const dt = Math.max(0, Math.min(0.05, (t - lastT) / 1000));
+      lastT = t;
+      let busy = false;
+      for (const k of keys) {
+        const cur = this.progress[k];
+        if (cur < target[k]) { this.progress[k] = Math.min(target[k], cur + dt / 2.6); busy = true; }
+        else if (cur > target[k]) this.progress[k] = target[k];
+      }
+      this.draw();
+      if (busy) this.raf = requestAnimationFrame(tick);
+      else this.finish();
+    };
+    this.raf = requestAnimationFrame(tick);
+  },
+
+  finish() {
+    const done = this.progress.patient >= 1 && this.progress.impatient >= 1;
+    if (done) {
+      const gap = this.series.patient[this.n - 1] - this.series.impatient[this.n - 1];
+      this.vals.gap.textContent = inr(gap);
+    }
+    this.keys.gap.classList.toggle("is-on", done);
   },
 
   enter(step, instant) { this.go(step, instant); },
-  leave() {},
+  leave() { cancelAnimationFrame(this.raf); },
 
-  async go(step, instant = false) {
-    this.step = step;
-    const token = (this._token = Symbol());
-    this.root.classList.toggle("is-playing", step >= 1);
-    this.lines.forEach((el) => el.classList.add("is-on"));
-    if (step < 2) this.el.result.classList.remove("is-visible");
-    this.el.replay.hidden = step < 1;
-
-    const backwards = STOP[step] < this.chart.visible;
-    await this.chart.play(STOP[step], { instant: instant || backwards, speed: 16 });
-    this.updateCounters(this.chart.visible);
-    if (token !== this._token) return;
-    if (step === 2) this.showResult(!instant);
+  go(step, instant = false) {
+    this.root.classList.add("is-entered");
+    this.hl.impatient.classList.toggle("is-active", step === 1);
+    this.hl.patient.classList.toggle("is-active", step === 2);
+    this.keys.impatient.classList.toggle("is-on", step >= 1);
+    this.keys.patient.classList.toggle("is-on", step >= 2);
+    const target = { impatient: step >= 1 ? 1 : 0, patient: step >= 2 ? 1 : 0 };
+    if (step < 2) this.keys.gap.classList.remove("is-on");
+    if (instant) {
+      this.progress = { ...target };
+      this.draw();
+      this.finish();
+    } else this.animate(target);
   },
 };
