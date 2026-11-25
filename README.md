@@ -20,9 +20,11 @@ A scene's address is its number, e.g. `#02`.
 - `css/styles.css`: theme and layout
 - `js/main.js`: navigation (scenes, in-scene steps, URL, keyboard, swipe)
 - `js/candles.js`: candlestick chart engine (data generation, animation, draggable levels)
-- `js/scenes/`: one module per interactive scene
+- `js/scenes/`: one module per interactive scene (`hero.js`, the 3D candle field, is kept for the closing scene)
 - `vendor/`: three.js (3D hero) and GSAP, pinned copies so the deck works offline
 - `assets/`: Archivo variable font (self-hosted) and the SMISHA logo
+- `PRODUCT.md`, `DESIGN.md`: product context and the design system
+- `docs/slide-content.md`: text and build notes for every slide
 
 ## Adding a scene
 

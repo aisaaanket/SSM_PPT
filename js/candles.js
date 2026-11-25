@@ -9,7 +9,7 @@ export const COLORS = {
   muted: "#93a6bf",
   grid: "rgba(238,242,247,0.07)",
   axis: "rgba(238,242,247,0.45)",
-  bg: "#0c1f38",
+  bg: "#15304b",
 };
 
 const FONT = '"Archivo", system-ui, sans-serif';
@@ -124,7 +124,7 @@ export function pivots(candles, w = 3) {
 // ---------------------------------------------------------------- chart
 
 export class CandleChart {
-  constructor(canvas, { candles, yMin, yMax, gridStep, pad, decimals = 0 }) {
+  constructor(canvas, { candles, yMin, yMax, gridStep, pad, decimals = 0, axis = true, maxBody = 18, ghost = 0 }) {
     this.canvas = canvas;
     this.ctx = canvas.getContext("2d");
     this.candles = candles;
@@ -132,7 +132,11 @@ export class CandleChart {
     this.yMax = yMax;
     this.gridStep = gridStep;
     this.decimals = decimals;
-    this.pad = { l: 24, r: 76, t: 28, b: 28, ...pad };
+    this.axis = axis; // false: full-bleed chart with no price labels
+    this.maxBody = maxBody;
+    this.ghost = ghost; // 0 = off; otherwise alpha for not-yet-printed candles
+    this.padOpt = pad || {};
+    this.pad = { l: 24, r: axis ? 76 : 24, t: 28, b: 28, ...pad };
     this.visible = 0; // number of candles shown (fractional = growing candle)
     this.overlays = new Map(); // id -> overlay
     this.running = false;
@@ -157,7 +161,8 @@ export class CandleChart {
     this.canvas.height = Math.round(height * dpr);
     this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     // narrow screens: tighten the price axis
-    this.pad.r = width < 520 ? 58 : 76;
+    if (this.axis && this.padOpt.r == null) this.pad.r = width < 520 ? 58 : 76;
+    this.onResize && this.onResize();
     this.draw();
   }
   get plotW() { return this.w - this.pad.l - this.pad.r; }
@@ -252,6 +257,7 @@ export class CandleChart {
       if (o.type === "hline") this._drawHLine(o, t);
       else if (o.type === "marker") this._drawMarker(o);
       else if (o.type === "dots") this._drawDots(o);
+      else if (o.type === "path") this._drawPath(o);
     }
   }
 
@@ -268,10 +274,10 @@ export class CandleChart {
     for (let p = start; p <= this.yMax; p += this.gridStep) {
       const y = Math.round(this.y(p)) + 0.5;
       ctx.beginPath();
-      ctx.moveTo(this.pad.l, y);
-      ctx.lineTo(this.w - this.pad.r, y);
+      ctx.moveTo(this.axis ? this.pad.l : 0, y);
+      ctx.lineTo(this.axis ? this.w - this.pad.r : this.w, y);
       ctx.stroke();
-      ctx.fillText(this.fmt(p), this.w - this.pad.r + 10, y);
+      if (this.axis) ctx.fillText(this.fmt(p), this.w - this.pad.r + 10, y);
     }
     ctx.restore();
   }
@@ -281,7 +287,7 @@ export class CandleChart {
     const n = Math.floor(this.visible);
     const frac = this.visible - n;
     const slot = this.slot();
-    const bw = Math.max(2, Math.min(18, slot * 0.62));
+    const bw = Math.max(2, Math.min(this.maxBody, slot * 0.62));
     const draw = (c, i, grow) => {
       const up = c.c >= c.o;
       const color = up ? COLORS.bull : COLORS.bear;
@@ -301,6 +307,13 @@ export class CandleChart {
       const bot = this.y(Math.min(c.o, close));
       ctx.fillRect(x - bw / 2, top, bw, Math.max(1.5, bot - top));
     };
+    // ghost: the candles still to come, drawn faintly so the whole path is hinted
+    if (this.ghost) {
+      ctx.save();
+      ctx.globalAlpha = this.ghost;
+      for (let i = Math.ceil(this.visible); i < this.candles.length; i++) draw(this.candles[i], i, 1);
+      ctx.restore();
+    }
     for (let i = 0; i < n && i < this.candles.length; i++) draw(this.candles[i], i, 1);
     if (frac > 0.02 && n < this.candles.length) draw(this.candles[n], n, frac);
   }
@@ -366,6 +379,7 @@ export class CandleChart {
     }
 
     // price tag on the axis
+    if (o.tag === false) { ctx.restore(); return; }
     const tag = this.fmt(o.price);
     ctx.font = `700 12px ${FONT}`;
     const tw = ctx.measureText(tag).width + 14;
@@ -435,6 +449,22 @@ export class CandleChart {
     ctx.fillStyle = o.ink || o.color;
     ctx.textBaseline = "top";
     lines.forEach((l, k) => ctx.fillText(l, bx + 8, by + 5 + k * 17));
+    ctx.restore();
+  }
+
+  _drawPath(o) {
+    // a polyline through {i, p} points, revealed as the candles print
+    const { ctx } = this;
+    const pts = o.points.filter((q) => q.i < this.visible - 0.5);
+    if (pts.length < 2) return;
+    ctx.save();
+    ctx.globalAlpha = o.alpha;
+    ctx.strokeStyle = o.color;
+    ctx.lineWidth = o.width || 2;
+    ctx.lineJoin = "round";
+    ctx.beginPath();
+    pts.forEach((q, k) => (k ? ctx.lineTo(this.x(q.i), this.y(q.p)) : ctx.moveTo(this.x(q.i), this.y(q.p))));
+    ctx.stroke();
     ctx.restore();
   }
 

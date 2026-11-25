@@ -1,0 +1,13 @@
+{
+  "motion": {
+    "ease": "cubic-bezier(0.16, 1, 0.3, 1)",
+    "sceneFade": "600ms",
+    "candlePrint": "9-14 candles per second",
+    "taglineReveal": "clip-path wipe 700ms + color 400ms",
+    "reducedMotion": "candles and overlays appear instantly; words fade without wipe"
+  },
+  "effects": {
+    "ticketBackdrop": "blur(8px) over rgba(10,27,45,0.82)",
+    "focusRing": "2px solid #ffb800, offset 3px"
+  }
+}

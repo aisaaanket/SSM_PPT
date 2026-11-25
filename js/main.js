@@ -1,10 +1,10 @@
 // Deck controller: scenes, in-scene steps, URL hash, keyboard, touch and rail.
 
-import hero from "./scenes/hero.js";
+import title from "./scenes/title.js";
 import doubleBottom from "./scenes/double-bottom.js";
 import supportResistance from "./scenes/support-resistance.js";
 
-const MODULES = { hero, "double-bottom": doubleBottom, "support-resistance": supportResistance };
+const MODULES = { title, "double-bottom": doubleBottom, "support-resistance": supportResistance };
 
 const sections = [...document.querySelectorAll(".scene")];
 const scenes = sections.map((el, index) => {
