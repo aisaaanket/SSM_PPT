@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SMISHA Share Market Classes</title>
+  <meta name="description" content="An interactive walk through the stock market with SMISHA Share Market Classes, Kharadi, Pune.">
+  <meta name="theme-color" content="#071426">
+  <link rel="preload" href="assets/fonts/archivo-latin-wdth-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="icon" href="assets/img/smisha-logo.webp" type="image/webp">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <main class="deck">
+
+    <!-- 01 Hero -->
+    <section class="scene scene--hero" data-scene="hero" aria-label="Introduction">
+      <canvas class="hero-canvas" aria-hidden="true"></canvas>
+      <div class="hero-shade"></div>
+      <div class="hero-copy">
+        <img class="hero-logo" src="assets/img/smisha-logo.webp" width="686" height="574" alt="SMISHA Share Market Classes. Learn. Analyse. Grow.">
+        <h1>Smarter trading starts here.</h1>
+        <p>Learn how the market really moves, read charts with confidence and build the discipline to protect your capital.</p>
+        <div class="actions">
+          <button class="btn btn--gold" data-goto-next>Start the tour</button>
+        </div>
+        <p class="hero-tip">Presenting? Use the arrow keys to move and F for full screen.</p>
+      </div>
+      <p class="hero-meta">Office 415, Gera Imperium Alpha, Kharadi, Pune<br>+91 7420 009 339</p>
+    </section>
+
+    <!-- 02 Double bottom (2B) -->
+    <section class="scene scene--split" data-scene="double-bottom" aria-label="The 2B double bottom pattern" aria-hidden="true">
+      <div class="story">
+        <h2>The 2B: when a breakdown fails</h2>
+        <p class="lede">The second low dips under the first, shakes out nervous sellers, then reverses. Traders call it a 2B.</p>
+        <ol class="steps">
+          <li><span class="n">1</span><span>Price falls from 220 and finds a first bottom at 200.</span></li>
+          <li><span class="n">2</span><span>It bounces to 210. That high becomes the trigger line.</span></li>
+          <li><span class="n">3</span><span>It breaks below 200 to 195. Sellers panic, but the move fails.</span></li>
+          <li><span class="n">4</span><span>A close above 210 is the buy. The stop-loss sits under the trap low, at 195.</span></li>
+          <li><span class="n">5</span><span>Drag the stop-loss or target and see how risk and reward change.</span></li>
+        </ol>
+        <div class="actions">
+          <button class="btn" data-replay>Replay</button>
+          <button class="btn" data-reset>Reset levels</button>
+        </div>
+      </div>
+      <div class="stage">
+        <canvas role="img" aria-label="Candlestick chart of a double bottom: falls to 200, bounces to 210, dips to 195, then breaks above 210 and rallies to 240."></canvas>
+        <div class="ticket" aria-live="polite">
+          <dl>
+            <dt>Entry</dt><dd data-entry></dd>
+            <dt>Stop-loss</dt><dd data-sl></dd>
+            <dt>Target</dt><dd data-target></dd>
+            <dt>Risk</dt><dd data-risk></dd>
+            <dt>Reward</dt><dd data-reward></dd>
+          </dl>
+          <div class="rr">Risk : reward <strong data-rr></strong></div>
+          <p class="hint">Drag the red and green lines</p>
+        </div>
+        <div class="toast" role="status"></div>
+        <p class="stage-note">Illustrative price data, based on the levels taught in class.</p>
+      </div>
+    </section>
+
+    <!-- 03 Support and resistance -->
+    <section class="scene scene--split" data-scene="support-resistance" aria-label="Support and resistance" aria-hidden="true">
+      <div class="story">
+        <h2>Find the floor and the ceiling</h2>
+        <p class="lede">Support is where buyers keep stepping in. Resistance is where sellers keep taking profit. The more often price turns at a level, the more it matters.</p>
+        <ol class="steps">
+          <li><span class="n">1</span><span data-status>Drag each line until it touches three turning points.</span></li>
+          <li><span class="n">2</span><span>Price closes above resistance: a breakout.</span></li>
+          <li><span class="n">3</span><span>It pulls back to the old ceiling, which now holds as a floor. That retest is the safer entry.</span></li>
+          <li><span class="n">4</span><span>The trend continues. Resistance near 1,548 is now support.</span></li>
+        </ol>
+        <div class="actions">
+          <button class="btn" data-show>Show me the levels</button>
+        </div>
+      </div>
+      <div class="stage">
+        <canvas role="img" aria-label="Candlestick chart ranging between support near 1,482 and resistance near 1,548, then breaking out above 1,548 and retesting it as support."></canvas>
+        <div class="toast" role="status"></div>
+        <p class="stage-note">Illustrative price data.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <nav class="rail" aria-label="Slides">
+    <div class="rail-progress" data-rail-progress></div>
+    <span class="rail-count" data-rail-count></span>
+    <span class="rail-title" data-rail-title></span>
+    <span class="rail-spacer"></span>
+    <span class="rail-disclaimer">For learning only. Investments in securities markets are subject to market risks.</span>
+    <button class="btn" data-prev>Previous</button>
+    <button class="btn btn--gold" data-next>Next</button>
+  </nav>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
