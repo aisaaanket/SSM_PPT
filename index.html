@@ -15,8 +15,14 @@
 
     <!-- 01 Title -->
     <section class="scene scene--title" data-scene="title" data-theme="light" aria-label="SMISHA Share Market Classes">
+      <svg class="title-corner" viewBox="0 0 340 225" aria-hidden="true">
+        <path d="M0,0 L290,0 C190,30 80,95 0,190 Z" fill="url(#tPanel)"/>
+        <path d="M290,0 C190,30 80,95 0,190" fill="none" stroke="url(#tGold)" stroke-width="7"/>
+        <path d="M340,0 C215,40 95,115 0,225" fill="none" stroke="#e7c06a" stroke-width="1.5" opacity="0.7"/>
+      </svg>
       <div class="title-art" aria-hidden="true">
-        <svg class="title-back" viewBox="0 0 1672 941" preserveAspectRatio="xMaxYMid slice">
+       <div class="title-stage">
+        <svg class="title-back" viewBox="0 0 1672 941">
           <defs>
             <linearGradient id="tPanel" x1="0" y1="0" x2="1" y2="0.4">
               <stop offset="0" stop-color="#0e7050"/>
@@ -60,20 +66,17 @@
           </g>
           <!-- mist where the panel meets the cream -->
           <ellipse cx="960" cy="760" rx="300" ry="190" fill="url(#tMist)"/>
-          <!-- top-left emerald corner with its gold edge -->
-          <path d="M0,0 L290,0 C190,30 80,95 0,190 Z" fill="url(#tPanel)"/>
-          <path d="M290,0 C190,30 80,95 0,190" fill="none" stroke="url(#tGold)" stroke-width="7"/>
-          <path d="M340,0 C215,40 95,115 0,225" fill="none" stroke="#e7c06a" stroke-width="1.5" opacity="0.7"/>
         </svg>
         <canvas class="title-chart"></canvas>
         <img class="title-bull" src="assets/img/gold-bull.webp" width="784" height="639" alt="">
-        <svg class="title-front" viewBox="0 0 1672 941" preserveAspectRatio="xMaxYMid slice">
+        <svg class="title-front" viewBox="0 0 1672 941">
           <!-- gold ribbons sweeping across the bottom, in front of the rock -->
           <path d="M700,941 C1010,890 1330,815 1672,700 L1672,745 C1350,850 1070,915 860,941 Z" fill="url(#tGold)" opacity="0.85"/>
           <path d="M650,941 C980,880 1320,800 1672,680" fill="none" stroke="#fff4d2" stroke-width="2.5" opacity="0.9"/>
           <path d="M980,941 C1260,885 1480,830 1672,780 L1672,941 Z" fill="url(#tPanel)"/>
           <path d="M980,941 C1260,885 1480,830 1672,780" fill="none" stroke="url(#tGold)" stroke-width="5"/>
         </svg>
+       </div>
       </div>
 
       <div class="title-copy">

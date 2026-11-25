@@ -291,17 +291,40 @@ input { caret-color: var(--gold); }
 
 /* ---------- Title (scene 01): cream and emerald ---------- */
 
+/*
+  Sizing: --u is 1% of the scene height on 16:9 and wider screens, and shrinks
+  with the width on narrower ones (4:3 projectors, tablets), so the copy never
+  runs into the emerald panel. The artwork lives on a fixed 1672x941 stage
+  anchored right, so the SVG, the chart and the bull always line up.
+*/
 .scene--title {
+  container-type: size;
   background: radial-gradient(90% 120% at 30% 45%, var(--cream) 0%, var(--cream) 45%, var(--cream-edge) 100%);
   color: var(--emerald-ink);
-  container-type: size;
 }
-.title-art { position: absolute; inset: 0; }
+.scene--title > * { --u: min(1cqh, 0.53cqw); }
+
+.title-art { position: absolute; inset: 0; overflow: hidden; }
+.title-stage {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  aspect-ratio: 1672 / 941;
+}
 .title-back, .title-front {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
+}
+.title-corner {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: calc(var(--u) * 36);
+  height: auto;
+  z-index: 1;
 }
 .title-chart {
   position: absolute;
@@ -328,15 +351,19 @@ input { caret-color: var(--gold); }
 
 .title-copy {
   position: relative;
-  align-self: start;
-  padding: 4.5cqh 0 0 5.8cqw;
-  width: 56cqw;
+  z-index: 2;
+  align-self: center;
+  /* on ultrawide screens the copy drifts right to stay near the panel */
+  padding-left: calc(var(--u) * 11 + max(0px, (100cqw - 189cqh) / 2));
+  padding-bottom: calc(var(--u) * 2);
+  width: fit-content;
+  max-width: calc(var(--u) * 106 + max(0px, (100cqw - 189cqh) / 2));
 }
 .title-logo {
   display: block;
-  width: 18cqw;
+  width: calc(var(--u) * 34);
   height: auto;
-  margin: 0 0 3.5cqh 6.5cqw;
+  margin: 0 0 calc(var(--u) * 3.5) calc(var(--u) * 12);
 }
 .title-copy h1 {
   font-family: var(--font-serif);
@@ -347,27 +374,27 @@ input { caret-color: var(--gold); }
 }
 .t-name {
   display: block;
-  font-size: 9.6cqh;
+  font-size: calc(var(--u) * 9.6);
   color: var(--emerald-ink);
 }
 .t-sub {
   display: block;
-  font-size: 7.4cqh;
+  font-size: calc(var(--u) * 7.4);
   color: var(--bronze);
+  white-space: nowrap;
 }
 .title-rule {
   display: block;
-  width: 8.3cqw;
-  height: 0.6cqh;
-  min-height: 4px;
-  margin: 3.6cqh 0 6.8cqh;
+  width: calc(var(--u) * 15.6);
+  height: max(3px, calc(var(--u) * 0.6));
+  margin: calc(var(--u) * 3.6) 0 calc(var(--u) * 6);
   border-radius: 2px;
   background: linear-gradient(90deg, #8f6216, var(--bronze-soft) 60%, #b98a3a);
 }
 .title-pill {
   display: inline-block;
   margin: 0;
-  padding: 1.5cqh 2.2cqw;
+  padding: calc(var(--u) * 1.5) calc(var(--u) * 4.2);
   border-radius: 999px;
   background: linear-gradient(90deg, #f3d394 0%, #f8e1ad 55%, #f2d090 100%);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6), 0 6px 18px rgba(154, 107, 29, 0.12);
@@ -375,7 +402,7 @@ input { caret-color: var(--gold); }
   font-style: italic;
   font-weight: 800;
   font-stretch: 100%;
-  font-size: 3.1cqh;
+  font-size: max(13px, calc(var(--u) * 3.1));
   color: #05230b;
   white-space: nowrap;
 }
@@ -383,17 +410,20 @@ input { caret-color: var(--gold); }
   list-style: none;
   display: flex;
   align-items: center;
-  margin: 8.6cqh 0 0;
-  padding: 0 0 0 0.6cqw;
+  margin: calc(var(--u) * 8) 0 0;
+  padding: 0;
 }
 .title-pillars li {
+  --icon: calc(var(--u) * 6.6);
+  --gap: calc(var(--u) * 2.8);
+  --side: calc(var(--u) * 5.6);
   display: flex;
   align-items: center;
-  gap: 1.5cqw;
-  padding: 0 3cqw;
+  gap: var(--gap);
+  padding: 0 var(--side);
   font-family: var(--font);
   font-weight: 600;
-  font-size: 3cqh;
+  font-size: max(12px, calc(var(--u) * 3));
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--emerald-ink);
@@ -403,8 +433,9 @@ input { caret-color: var(--gold); }
 .title-pillars li:first-child { padding-left: 0; }
 .title-pillars li + li { border-left: 1.5px solid rgba(2, 45, 29, 0.55); }
 .title-pillars svg {
-  width: 3.6cqw;
-  height: 3.6cqw;
+  flex: none;
+  width: var(--icon);
+  height: var(--icon);
   fill: none;
   stroke: var(--bronze);
   stroke-width: 1.8;
@@ -416,9 +447,9 @@ input { caret-color: var(--gold); }
 .title-pillars li::after {
   content: "";
   position: absolute;
-  left: calc(3.6cqw + 1.5cqw);
-  right: 3cqw;
-  bottom: -1.4cqh;
+  left: calc(var(--icon) + var(--gap));
+  right: var(--side);
+  bottom: calc(var(--u) * -1.6);
   height: 3px;
   border-radius: 2px;
   background: var(--bronze-soft);
@@ -426,7 +457,7 @@ input { caret-color: var(--gold); }
   transform-origin: left;
   transition: transform 500ms var(--ease-out);
 }
-.title-pillars li:first-child::after { left: calc(3.6cqw + 1.5cqw); }
+.title-pillars li:first-child::after { left: calc(var(--icon) + var(--gap)); }
 .title-pillars li.is-current { color: var(--bronze); }
 .title-pillars li.is-current svg { transform: translateY(-3px) scale(1.08); }
 .title-pillars li.is-current::after { transform: scaleX(1); }
@@ -520,20 +551,22 @@ body[data-theme="light"] .rail-progress { background: var(--bronze-soft); }
   .title-bars rect, .title-pillars svg, .title-pillars li::after { transition: none; }
 }
 
-/* Title on portrait screens: copy on top, the emerald panel with chart and bull below */
-@media (max-aspect-ratio: 1/1) {
-  .scene--title { container-type: inline-size; }
-  .title-art { top: auto; height: 38%; }
-  .title-chart { left: 30%; width: 68%; top: 4%; height: 58%; }
-  .title-bull { width: 60%; right: 2%; bottom: 6%; }
-  .title-copy { width: auto; padding: 3.5vh 6vw 0; }
-  .title-logo { width: 34vw; margin: 0 0 2vh; }
-  .t-name { font-size: 13vw; }
-  .t-sub { font-size: 8.4vw; }
-  .title-rule { width: 22vw; margin: 1.8vh 0 2.4vh; }
-  .title-pill { font-size: 3.6vw; padding: 1.2vh 4vw; white-space: normal; }
-  .title-pillars { margin-top: 3vh; }
-  .title-pillars li { font-size: 3.4vw; gap: 2vw; padding: 0 3.5vw; }
-  .title-pillars svg { width: 6vw; height: 6vw; }
-  .title-pillars li::after { left: calc(6vw + 2vw); right: 3.5vw; bottom: -1vh; }
+/* Title on portrait and near-square screens: copy on top, the emerald panel below */
+@media (max-aspect-ratio: 6/5) {
+  .scene--title > * { --u: min(0.62cqh, 0.95cqw); }
+  .title-art { top: auto; height: 40%; }
+  .title-copy {
+    align-self: start;
+    padding: calc(var(--u) * 6) calc(var(--u) * 6) 0;
+    max-width: none;
+    width: auto;
+  }
+  .title-logo { width: calc(var(--u) * 34); margin: 0 0 calc(var(--u) * 3); }
+  .t-name { font-size: calc(var(--u) * 13); }
+  .t-sub { font-size: calc(var(--u) * 8.6); white-space: normal; }
+  .title-rule { width: calc(var(--u) * 22); margin: calc(var(--u) * 3) 0 calc(var(--u) * 4); }
+  .title-pill { font-size: max(13px, calc(var(--u) * 3.9)); padding: calc(var(--u) * 2) calc(var(--u) * 4.5); white-space: normal; }
+  .title-pillars { margin-top: calc(var(--u) * 6); }
+  .title-pillars li { font-size: max(11px, calc(var(--u) * 3.5)); --icon: calc(var(--u) * 6.5); --gap: calc(var(--u) * 2); --side: calc(var(--u) * 3.6); }
+  .title-corner { width: calc(var(--u) * 30); }
 }
