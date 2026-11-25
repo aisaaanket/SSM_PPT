@@ -9,6 +9,13 @@
   font-display: swap;
 }
 @font-face {
+  font-family: "Source Serif";
+  src: url("../assets/fonts/source-serif-4-latin-wght-normal.woff2") format("woff2-variations");
+  font-weight: 200 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
   font-family: "Archivo";
   src: url("../assets/fonts/archivo-latin-wdth-italic.woff2") format("woff2-variations");
   font-weight: 100 900;
@@ -33,6 +40,16 @@
   --bear: #e5484d;
 
   --font: "Archivo", system-ui, sans-serif;
+  --font-serif: "Source Serif", Georgia, serif;
+
+  /* light world (title scene), from the client's reference slide */
+  --cream: #fdf8f0;
+  --cream-edge: #f5ead8;
+  --emerald-ink: #022d1d;
+  --emerald: #065a40;
+  --bronze: #9a6b1d;
+  --bronze-soft: #c8952f;
+  --pill: #f6d8a0;
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --rail-h: 64px;
   --gutter: clamp(16px, 4vw, 64px);
@@ -272,69 +289,160 @@ input { caret-color: var(--gold); }
 .toast.is-visible { opacity: 1; transform: translate(-50%, 0); }
 .toast.is-good { border-color: var(--bull); color: #7fe0b8; }
 
-/* ---------- Title (scene 01) ---------- */
+/* ---------- Title (scene 01): cream and emerald ---------- */
 
-.scene--title { background: var(--navy-900); }
-.title-chart {
+.scene--title {
+  background: radial-gradient(90% 120% at 30% 45%, var(--cream) 0%, var(--cream) 45%, var(--cream-edge) 100%);
+  color: var(--emerald-ink);
+  container-type: size;
+}
+.title-art { position: absolute; inset: 0; }
+.title-back, .title-front {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
 }
+.title-chart {
+  position: absolute;
+  left: 58%;
+  top: 7%;
+  width: 40%;
+  height: 46%;
+}
+.title-bull {
+  position: absolute;
+  right: 4.5%;
+  bottom: 10%;
+  width: 30.5%;
+  height: auto;
+  filter: drop-shadow(0 18px 30px rgba(1, 40, 28, 0.35));
+}
+.title-bars rect {
+  transform-box: fill-box;
+  transform-origin: bottom;
+  transition: transform 900ms var(--ease-out);
+  transform: scaleY(0.2);
+}
+.scene--title.is-entered .title-bars rect { transform: scaleY(1); }
+
 .title-copy {
   position: relative;
   align-self: start;
-  padding: clamp(24px, 5vh, 64px) var(--gutter) 0;
-  max-width: min(54vw, 1000px);
-  display: grid;
-  justify-items: start;
+  padding: 4.5cqh 0 0 5.8cqw;
+  width: 56cqw;
 }
 .title-logo {
-  width: clamp(120px, 11vw, 200px);
+  display: block;
+  width: 18cqw;
   height: auto;
-  margin: 0 0 clamp(14px, 2.6vh, 32px) -6px;
+  margin: 0 0 3.5cqh 6.5cqw;
 }
 .title-copy h1 {
-  font-size: clamp(34px, 3.7vw, 76px);
-  font-weight: 850;
-  font-stretch: 112%;
-  line-height: 0.98;
-  letter-spacing: -0.02em;
-  margin: 0 0 clamp(12px, 2vh, 22px);
-  text-wrap: balance;
-}
-.title-copy p {
-  font-size: clamp(17px, 1.35vw, 24px);
-  line-height: 1.45;
-  color: var(--muted);
-  max-width: 40ch;
-  margin: 0 0 clamp(16px, 2.8vh, 30px);
-}
-.title-copy .btn { font-size: clamp(15px, 1.05vw, 19px); padding: 0.75em 1.3em; }
-
-/* The tagline words sit on the chart; scene JS sets --x / --y from price coordinates. */
-.title-word {
-  position: absolute;
-  left: 0;
-  top: 0;
+  font-family: var(--font-serif);
+  font-weight: 700;
   margin: 0;
-  transform: translate(var(--x, 0), var(--y, 0));
-  font-size: clamp(30px, 3.9vw, 76px);
-  font-weight: 850;
-  font-stretch: 125%;
-  letter-spacing: -0.01em;
-  line-height: 1;
-  color: var(--paper);
-  opacity: 0;
-  clip-path: inset(0 100% 0 0);
-  transition: opacity 300ms, clip-path 700ms var(--ease-out), color 400ms;
-  pointer-events: none;
+  line-height: 1.02;
+  letter-spacing: -0.005em;
+}
+.t-name {
+  display: block;
+  font-size: 9.6cqh;
+  color: var(--emerald-ink);
+}
+.t-sub {
+  display: block;
+  font-size: 7.4cqh;
+  color: var(--bronze);
+}
+.title-rule {
+  display: block;
+  width: 8.3cqw;
+  height: 0.6cqh;
+  min-height: 4px;
+  margin: 3.6cqh 0 6.8cqh;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #8f6216, var(--bronze-soft) 60%, #b98a3a);
+}
+.title-pill {
+  display: inline-block;
+  margin: 0;
+  padding: 1.5cqh 2.2cqw;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #f3d394 0%, #f8e1ad 55%, #f2d090 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6), 0 6px 18px rgba(154, 107, 29, 0.12);
+  font-family: var(--font);
+  font-style: italic;
+  font-weight: 800;
+  font-stretch: 100%;
+  font-size: 3.1cqh;
+  color: #05230b;
   white-space: nowrap;
 }
-.title-word--above { transform: translate(var(--x, 0), var(--y, 0)) translateY(-100%); }
-.title-word.is-on { opacity: 1; clip-path: inset(0 0 0 0); }
-.title-word.is-current { color: var(--gold); }
-.title-word.is-on:not(.is-current) { color: rgba(238, 242, 247, 0.55); }
+.title-pillars {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  margin: 8.6cqh 0 0;
+  padding: 0 0 0 0.6cqw;
+}
+.title-pillars li {
+  display: flex;
+  align-items: center;
+  gap: 1.5cqw;
+  padding: 0 3cqw;
+  font-family: var(--font);
+  font-weight: 600;
+  font-size: 3cqh;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--emerald-ink);
+  position: relative;
+  transition: color 300ms;
+}
+.title-pillars li:first-child { padding-left: 0; }
+.title-pillars li + li { border-left: 1.5px solid rgba(2, 45, 29, 0.55); }
+.title-pillars svg {
+  width: 3.6cqw;
+  height: 3.6cqw;
+  fill: none;
+  stroke: var(--bronze);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 400ms var(--ease-out);
+}
+/* the pillar the presenter is on: bronze label, icon lifts, gold underline draws in */
+.title-pillars li::after {
+  content: "";
+  position: absolute;
+  left: calc(3.6cqw + 1.5cqw);
+  right: 3cqw;
+  bottom: -1.4cqh;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--bronze-soft);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 500ms var(--ease-out);
+}
+.title-pillars li:first-child::after { left: calc(3.6cqw + 1.5cqw); }
+.title-pillars li.is-current { color: var(--bronze); }
+.title-pillars li.is-current svg { transform: translateY(-3px) scale(1.08); }
+.title-pillars li.is-current::after { transform: scaleX(1); }
+
+/* light rail for light scenes */
+body[data-theme="light"] .rail {
+  background: var(--cream);
+  border-top-color: rgba(2, 45, 29, 0.14);
+}
+body[data-theme="light"] .rail-count { color: var(--emerald-ink); }
+body[data-theme="light"] .rail-count span,
+body[data-theme="light"] .rail-title,
+body[data-theme="light"] .rail-disclaimer { color: #4d6357; }
+body[data-theme="light"] .rail .btn { border-color: rgba(2, 45, 29, 0.35); color: var(--emerald-ink); }
+body[data-theme="light"] .rail .btn--gold { background: var(--bronze-soft); border-color: var(--bronze-soft); color: #1b1203; }
+body[data-theme="light"] .rail-progress { background: var(--bronze-soft); }
 
 /* ---------- Bottom rail ---------- */
 
@@ -404,12 +512,28 @@ input { caret-color: var(--gold); }
   .ticket { min-width: 0; left: 10px; top: 10px; padding: 10px 12px; }
   .ticket dl { font-size: 13px; }
   .ticket .rr strong { font-size: 20px; }
-  .title-copy { max-width: none; }
-  /* portrait: the chart takes the lower half so the trend never runs through the copy */
-  .title-chart { top: auto; bottom: 0; height: 52%; }
+
 }
 
 @media (prefers-reduced-motion: reduce) {
   .scene, .ticket, .toast, .rail-progress { transition: none !important; }
-  .title-word { transition: opacity 300ms, color 300ms; clip-path: none; }
+  .title-bars rect, .title-pillars svg, .title-pillars li::after { transition: none; }
+}
+
+/* Title on portrait screens: copy on top, the emerald panel with chart and bull below */
+@media (max-aspect-ratio: 1/1) {
+  .scene--title { container-type: inline-size; }
+  .title-art { top: auto; height: 38%; }
+  .title-chart { left: 30%; width: 68%; top: 4%; height: 58%; }
+  .title-bull { width: 60%; right: 2%; bottom: 6%; }
+  .title-copy { width: auto; padding: 3.5vh 6vw 0; }
+  .title-logo { width: 34vw; margin: 0 0 2vh; }
+  .t-name { font-size: 13vw; }
+  .t-sub { font-size: 8.4vw; }
+  .title-rule { width: 22vw; margin: 1.8vh 0 2.4vh; }
+  .title-pill { font-size: 3.6vw; padding: 1.2vh 4vw; white-space: normal; }
+  .title-pillars { margin-top: 3vh; }
+  .title-pillars li { font-size: 3.4vw; gap: 2vw; padding: 0 3.5vw; }
+  .title-pillars svg { width: 6vw; height: 6vw; }
+  .title-pillars li::after { left: calc(6vw + 2vw); right: 3.5vw; bottom: -1vh; }
 }

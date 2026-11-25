@@ -39,6 +39,7 @@ function goto(index, nextStep = 0, { instant = false } = {}) {
     current = index;
     const { el } = scenes[current];
     el.classList.add("is-active");
+    document.body.dataset.theme = el.dataset.theme || "dark";
     el.removeAttribute("aria-hidden");
   }
   const { mod } = scenes[current];

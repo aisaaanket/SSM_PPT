@@ -11,7 +11,20 @@ colors:
   logo-gold: "#ffb800"
   candle-up: "#22b07d"
   candle-down: "#e5484d"
+  cream: "#fdf8f0"
+  cream-edge: "#f5ead8"
+  emerald-ink: "#022d1d"
+  emerald: "#065a40"
+  bronze: "#9a6b1d"
+  bronze-soft: "#c8952f"
+  pill-gold: "#f6d8a0"
 typography:
+  title-serif:
+    fontFamily: "Source Serif, Georgia, serif"
+    fontSize: "9.6cqh"
+    fontWeight: 700
+    lineHeight: 1.02
+    letterSpacing: "-0.005em"
   display:
     fontFamily: "Archivo, system-ui, sans-serif"
     fontSize: "clamp(34px, 3.7vw, 76px)"
@@ -76,6 +89,13 @@ components:
 
 A seminar deck turned into full-screen web scenes, projected for a live audience and advanced by the trainer. The market is the material: every price, pattern and number is drawn live from data on canvas, never pasted as a picture. The world is the deck's own: deep navy ground, the logo's gold, and the green and red of real candles. One idea leads each scene, and the chart is usually that idea.
 
+## Two worlds
+
+- **Light (title scene, from the client's reference slide):** cream ground, emerald panel with a curved edge, glossy gold ribbons, a gold bull, Source Serif title in deep green and bronze. The rail switches to cream on light scenes (`data-theme="light"` on the scene).
+- **Dark (content scenes):** the deck's navy with logo gold, below.
+
+Which world later slides use is still open with the client.
+
 ## Colors
 
 ### Primary
@@ -96,7 +116,9 @@ A seminar deck turned into full-screen web scenes, projected for a live audience
 
 ## Typography
 
-One family, Archivo (variable width, self-hosted), used at two widths:
+Title scene: Source Serif (self-hosted, weight 700) for "SMISHA" (deep green) and "Share Market Classes" (bronze); Archivo bold italic in the gold pill; Archivo 600 tracked caps for the pillar labels.
+
+Elsewhere one family, Archivo (variable width, self-hosted), used at two widths:
 - **Wide and heavy** (stretch 108–125%, weight 800–850) for headlines and tagline words, echoing the wide SMISHA wordmark.
 - **Condensed** (stretch 75–90%) with tabular numerals for prices, step numbers and ticket figures.
 

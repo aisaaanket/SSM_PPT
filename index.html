@@ -14,17 +14,88 @@
   <main class="deck">
 
     <!-- 01 Title -->
-    <section class="scene scene--title" data-scene="title" aria-label="SMISHA Share Market Classes">
-      <canvas class="title-chart" role="img" aria-label="Illustrative candlestick chart: price moves sideways in a range, breaks out above it, then trends upward."></canvas>
-      <div class="title-copy">
-        <img class="title-logo" src="assets/img/smisha-logo.webp" width="686" height="574" alt="SMISHA Share Market Classes. Learn. Analyse. Grow.">
-        <h1>Your journey towards smarter trading starts here.</h1>
-        <p>Learn smart strategies, master market analysis and build trading discipline.</p>
-        <button class="btn btn--gold" data-goto-next>Start the tour</button>
+    <section class="scene scene--title" data-scene="title" data-theme="light" aria-label="SMISHA Share Market Classes">
+      <div class="title-art" aria-hidden="true">
+        <svg class="title-back" viewBox="0 0 1672 941" preserveAspectRatio="xMaxYMid slice">
+          <defs>
+            <linearGradient id="tPanel" x1="0" y1="0" x2="1" y2="0.4">
+              <stop offset="0" stop-color="#0e7050"/>
+              <stop offset="0.45" stop-color="#065a40"/>
+              <stop offset="1" stop-color="#013f2c"/>
+            </linearGradient>
+            <linearGradient id="tGold" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#fff3cf"/>
+              <stop offset="0.35" stop-color="#f1cf7c"/>
+              <stop offset="0.7" stop-color="#c8952f"/>
+              <stop offset="1" stop-color="#8f6216"/>
+            </linearGradient>
+            <linearGradient id="tGoldSoft" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#f7e3ad" stop-opacity="0.9"/>
+              <stop offset="1" stop-color="#f7e3ad" stop-opacity="0"/>
+            </linearGradient>
+            <radialGradient id="tMist" cx="0.5" cy="0.5" r="0.5">
+              <stop offset="0" stop-color="#fdf8f0" stop-opacity="0.95"/>
+              <stop offset="1" stop-color="#fdf8f0" stop-opacity="0"/>
+            </radialGradient>
+            <linearGradient id="tBars" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#9fe3bd" stop-opacity="0.75"/>
+              <stop offset="1" stop-color="#9fe3bd" stop-opacity="0.05"/>
+            </linearGradient>
+          </defs>
+          <!-- emerald panel with its curved edge -->
+          <path d="M1205,0 C1075,170 975,330 948,520 C925,690 990,860 1050,941 L1672,941 L1672,0 Z" fill="url(#tPanel)"/>
+          <!-- gold ribbon band along the panel edge -->
+          <path d="M1150,0 C1020,175 925,335 900,520 C880,690 940,860 1000,941 L1050,941 C990,860 925,690 948,520 C975,330 1075,170 1205,0 Z" fill="url(#tGold)" opacity="0.55"/>
+          <path d="M1205,0 C1075,170 975,330 948,520 C925,690 990,860 1050,941" fill="none" stroke="#fff4d2" stroke-width="3" opacity="0.9"/>
+          <path d="M1176,0 C1046,172 950,333 924,520 C902,690 965,860 1025,941" fill="none" stroke="#e7c06a" stroke-width="1.5" opacity="0.8"/>
+          <!-- pale volume bars behind the bull -->
+          <g class="title-bars" fill="url(#tBars)">
+            <rect x="1250" y="690" width="26" height="200"/>
+            <rect x="1300" y="640" width="26" height="250"/>
+            <rect x="1350" y="700" width="26" height="190"/>
+            <rect x="1460" y="660" width="26" height="230"/>
+            <rect x="1510" y="610" width="26" height="280"/>
+            <rect x="1560" y="580" width="26" height="310"/>
+            <rect x="1610" y="545" width="26" height="345"/>
+          </g>
+          <!-- mist where the panel meets the cream -->
+          <ellipse cx="960" cy="760" rx="300" ry="190" fill="url(#tMist)"/>
+          <!-- top-left emerald corner with its gold edge -->
+          <path d="M0,0 L290,0 C190,30 80,95 0,190 Z" fill="url(#tPanel)"/>
+          <path d="M290,0 C190,30 80,95 0,190" fill="none" stroke="url(#tGold)" stroke-width="7"/>
+          <path d="M340,0 C215,40 95,115 0,225" fill="none" stroke="#e7c06a" stroke-width="1.5" opacity="0.7"/>
+        </svg>
+        <canvas class="title-chart"></canvas>
+        <img class="title-bull" src="assets/img/gold-bull.webp" width="784" height="639" alt="">
+        <svg class="title-front" viewBox="0 0 1672 941" preserveAspectRatio="xMaxYMid slice">
+          <!-- gold ribbons sweeping across the bottom, in front of the rock -->
+          <path d="M700,941 C1010,890 1330,815 1672,700 L1672,745 C1350,850 1070,915 860,941 Z" fill="url(#tGold)" opacity="0.85"/>
+          <path d="M650,941 C980,880 1320,800 1672,680" fill="none" stroke="#fff4d2" stroke-width="2.5" opacity="0.9"/>
+          <path d="M980,941 C1260,885 1480,830 1672,780 L1672,941 Z" fill="url(#tPanel)"/>
+          <path d="M980,941 C1260,885 1480,830 1672,780" fill="none" stroke="url(#tGold)" stroke-width="5"/>
+        </svg>
       </div>
-      <p class="title-word title-word--above" data-word>Learn.</p>
-      <p class="title-word" data-word>Analyse.</p>
-      <p class="title-word title-word--above" data-word>Grow.</p>
+
+      <div class="title-copy">
+        <img class="title-logo" src="assets/img/smisha-logo-light.webp" width="686" height="574" alt="SMISHA Share Market Classes. Learn. Analyse. Grow.">
+        <h1><span class="t-name">SMISHA</span> <span class="t-sub">Share Market Classes</span></h1>
+        <span class="title-rule" aria-hidden="true"></span>
+        <p class="title-pill">Your Journey Towards Smarter Trading Starts Here!</p>
+        <ol class="title-pillars" aria-label="What you will do">
+          <li data-pillar>
+            <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M4 7.5c4-1.6 8-1.3 12 1.4v17c-4-2.7-8-3-12-1.4zM28 7.5c-4-1.6-8-1.3-12 1.4v17c4-2.7 8-3 12-1.4z"/><path d="M7 11.5c2.3-.6 4.6-.4 6.6.6M7 15.5c2.3-.6 4.6-.4 6.6.6M25 11.5c-2.3-.6-4.6-.4-6.6.6M25 15.5c-2.3-.6-4.6-.4-6.6.6"/></svg>
+            <span>Learn</span>
+          </li>
+          <li data-pillar>
+            <svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="13.5" cy="13.5" r="8.5"/><path d="M19.8 19.8 28 28"/><path d="M9.5 13.5a4 4 0 0 1 4-4"/></svg>
+            <span>Analyze</span>
+          </li>
+          <li data-pillar>
+            <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M5 27h4v-6H5zM12 27h4v-9h-4zM19 27h4V14h-4zM26 27h2V10"/><path d="M5 16l7-6 5 4 10-9"/><path d="M21.5 5H27v5.5"/></svg>
+            <span>Grow</span>
+          </li>
+        </ol>
+      </div>
     </section>
 
     <!-- 02 Double bottom (2B) -->
