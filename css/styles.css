@@ -118,7 +118,7 @@ input { caret-color: var(--gold); }
 }
 
 .story h2 {
-  font-size: clamp(28px, 2.9vw, 46px);
+  font-size: clamp(24px, 1.5vw + 1.6vh, 58px);
   font-weight: 800;
   font-stretch: 108%;
   line-height: 1.04;
@@ -128,7 +128,7 @@ input { caret-color: var(--gold); }
 }
 
 .story .lede {
-  font-size: clamp(16px, 1.25vw, 19px);
+  font-size: clamp(15px, 0.75vw + 0.6vh, 23px);
   line-height: 1.5;
   color: var(--muted);
   margin: 0 0 18px;
@@ -149,7 +149,7 @@ input { caret-color: var(--gold); }
   padding: 8px 12px;
   border-radius: 10px;
   color: var(--muted);
-  font-size: 15px;
+  font-size: clamp(14px, 0.7vw + 0.55vh, 21px);
   cursor: pointer;
   line-height: 1.45;
   transition: color 300ms, background-color 300ms;
@@ -196,7 +196,8 @@ input { caret-color: var(--gold); }
 
 .stage {
   position: relative;
-  height: min(calc(100vh - var(--rail-h) - 72px), 680px);
+  height: calc(100vh - var(--rail-h) - 2 * clamp(16px, 3.5vh, 40px));
+  height: calc(100dvh - var(--rail-h) - 2 * clamp(16px, 3.5vh, 40px));
   border-radius: 20px;
   background:
     radial-gradient(120% 90% at 70% 0%, rgba(255, 184, 0, 0.06), transparent 60%),
@@ -529,21 +530,49 @@ body[data-theme="light"] .rail-progress { background: var(--bronze-soft); }
 
 /* ---------- Responsive ---------- */
 
-@media (max-width: 900px) {
+/* Portrait phones and tablets: one column, chart right after the heading */
+@media (max-aspect-ratio: 1/1) {
   html, body { overflow: auto; }
   .scene--split {
     grid-template-columns: 1fr;
     align-content: start;
+    align-items: start;
+    gap: 12px;
     overflow-y: auto;
   }
-  .stage { height: 58vh; min-height: 360px; }
-  .story { max-width: none; max-height: none; overflow: visible; padding-right: 0; }
+  /* let the story's parts join the grid so the chart can sit between them */
+  .story { display: contents; }
+  .story h2 { order: 1; margin: 0; }
+  .story .lede { order: 2; margin: 0; }
+  .stage { order: 3; height: 52vh; height: 52dvh; min-height: 300px; }
+  .steps { order: 4; margin: 0; }
+  .story .actions { order: 5; padding-bottom: 16px; }
   .steps li { padding: 8px 10px; }
+}
+
+/* Short landscape screens (phones on their side): keep side by side, compact */
+@media (orientation: landscape) and (max-height: 540px) {
+  .scene--split {
+    grid-template-columns: minmax(230px, 0.8fr) 1.5fr;
+    padding: 10px var(--gutter);
+    gap: 14px;
+  }
+  .story h2 { font-size: 21px; margin-bottom: 6px; }
+  .story .lede { font-size: 13px; margin-bottom: 8px; }
+  .steps { margin-bottom: 8px; }
+  .steps li { font-size: 13px; padding: 5px 8px; grid-template-columns: 20px 1fr; }
+  .stage { border-radius: 14px; }
+  .ticket, .ticket.is-visible { transform: scale(0.78); transform-origin: top left; }
+  .btn { padding: 7px 12px; font-size: 13px; }
+}
+
+/* Narrow screens: trim the rail and the trade ticket */
+@media (max-width: 760px) {
   .rail-disclaimer { display: none; }
   .ticket { min-width: 0; left: 10px; top: 10px; padding: 10px 12px; }
   .ticket dl { font-size: 13px; }
   .ticket .rr strong { font-size: 20px; }
-
+  .rail { gap: 10px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
