@@ -101,6 +101,65 @@
       </div>
     </section>
 
+    <!-- 02 Buffett quote: patient vs impatient -->
+    <section class="scene scene--light scene--s2" data-scene="patience" data-theme="light" aria-label="The stock market transfers money from the impatient to the patient">
+      <svg class="title-corner" viewBox="0 0 340 225" aria-hidden="true">
+        <path d="M0,0 L290,0 C190,30 80,95 0,190 Z" fill="url(#tPanel)"/>
+        <path d="M290,0 C190,30 80,95 0,190" fill="none" stroke="url(#tGold)" stroke-width="7"/>
+        <path d="M340,0 C215,40 95,115 0,225" fill="none" stroke="#e7c06a" stroke-width="1.5" opacity="0.7"/>
+      </svg>
+
+      <figure class="s2-quote">
+        <span class="s2-mark" aria-hidden="true">&ldquo;</span>
+        <blockquote>
+          <p>
+            <span class="s2-line" data-qline style="--i:0">The stock market is a device</span>
+            <span class="s2-line" data-qline style="--i:1">for transferring money</span>
+            <span class="s2-line" data-qline style="--i:2">from the <em class="q-impatient">impatient</em></span>
+            <span class="s2-line" data-qline style="--i:3">to the <em class="q-patient">patient</em>.</span>
+          </p>
+        </blockquote>
+        <figcaption>Warren Buffett</figcaption>
+      </figure>
+
+      <div class="s2-panel">
+        <div class="s2-inner">
+          <h3>Same stock. Two investors. ₹1,00,000 each.</h3>
+          <div class="s2-chart-wrap">
+            <canvas class="s2-chart" role="img" aria-label="Illustrative six-year monthly price chart rising from 100 to 248 with three sharp falls. Triangles mark the impatient trader's sells and buys."></canvas>
+            <p class="s2-note">Illustrative price path: six years of monthly candles.</p>
+          </div>
+          <div class="s2-cards">
+            <div class="s2-card s2-card--patient" data-card="patient">
+              <p class="s2-who">Patient investor</p>
+              <p class="s2-how">Buys once and holds</p>
+              <p class="s2-value" data-patient>₹1,00,000</p>
+            </div>
+            <div class="s2-card s2-card--impatient" data-card="impatient">
+              <p class="s2-who">Impatient trader</p>
+              <p class="s2-how">Sells after every fall, buys back after every rise <span data-trades>0 trades</span></p>
+              <p class="s2-value" data-impatient>₹1,00,000</p>
+            </div>
+          </div>
+          <div class="s2-result" data-result aria-live="polite">
+            <p>Patience earned <strong data-gap>₹0</strong> more</p>
+            <span class="s2-gap" data-gap-bar aria-hidden="true"></span>
+          </div>
+          <div class="s2-controls">
+            <label for="s2-panic">Impatient trader sells after a fall of <output data-panic-out>8%</output></label>
+            <input id="s2-panic" type="range" min="4" max="20" step="1" value="8" data-panic>
+            <button class="btn s2-replay" data-replay hidden>Replay</button>
+          </div>
+        </div>
+      </div>
+
+      <svg class="s2-ribbon" viewBox="0 0 1672 300" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0,300 C420,280 900,230 1672,120 L1672,150 C960,250 480,292 120,300 Z" fill="url(#tGold)" opacity="0.8"/>
+        <path d="M0,296 C420,272 900,222 1672,108" fill="none" stroke="#fff4d2" stroke-width="2" opacity="0.9"/>
+      </svg>
+      <div class="s2-coins" data-coins aria-hidden="true"></div>
+    </section>
+
     <!-- 02 Double bottom (2B) -->
     <section class="scene scene--split" data-scene="double-bottom" aria-label="The 2B double bottom pattern" aria-hidden="true">
       <div class="story">

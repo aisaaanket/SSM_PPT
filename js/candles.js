@@ -124,7 +124,7 @@ export function pivots(candles, w = 3) {
 // ---------------------------------------------------------------- chart
 
 export class CandleChart {
-  constructor(canvas, { candles, yMin, yMax, gridStep, pad, decimals = 0, axis = true, maxBody = 18, ghost = 0 }) {
+  constructor(canvas, { candles, yMin, yMax, gridStep, pad, decimals = 0, axis = true, maxBody = 18, ghost = 0, palette = {} }) {
     this.canvas = canvas;
     this.ctx = canvas.getContext("2d");
     this.candles = candles;
@@ -134,6 +134,7 @@ export class CandleChart {
     this.decimals = decimals;
     this.axis = axis; // false: full-bleed chart with no price labels
     this.maxBody = maxBody;
+    this.col = { ...COLORS, ...palette }; // light scenes pass their own candle and grid colours
     this.ghost = ghost; // 0 = off; otherwise alpha for not-yet-printed candles
     this.padOpt = pad || {};
     this.pad = { l: 24, r: axis ? 76 : 24, t: 28, b: 28, ...pad };
@@ -237,6 +238,7 @@ export class CandleChart {
       if (o.target === 0 && o.alpha === 0) this.overlays.delete(id);
     }
     if (this.pulse) busy = true;
+    this.onFrame && this.onFrame(this.visible);
 
     this.draw(t);
     if (busy) requestAnimationFrame((tt) => this._frame(tt));
@@ -258,6 +260,7 @@ export class CandleChart {
       else if (o.type === "marker") this._drawMarker(o);
       else if (o.type === "dots") this._drawDots(o);
       else if (o.type === "path") this._drawPath(o);
+      else if (o.type === "trades") this._drawTrades(o);
     }
   }
 
@@ -267,8 +270,8 @@ export class CandleChart {
     ctx.font = `500 12px ${FONT}`;
     ctx.fontStretch = "condensed";
     ctx.textBaseline = "middle";
-    ctx.fillStyle = COLORS.axis;
-    ctx.strokeStyle = COLORS.grid;
+    ctx.fillStyle = this.col.axis;
+    ctx.strokeStyle = this.col.grid;
     ctx.lineWidth = 1;
     const start = Math.ceil(this.yMin / this.gridStep) * this.gridStep;
     for (let p = start; p <= this.yMax; p += this.gridStep) {
@@ -290,7 +293,7 @@ export class CandleChart {
     const bw = Math.max(2, Math.min(this.maxBody, slot * 0.62));
     const draw = (c, i, grow) => {
       const up = c.c >= c.o;
-      const color = up ? COLORS.bull : COLORS.bear;
+      const color = up ? this.col.bull : this.col.bear;
       // a growing candle opens at `o` and stretches towards its close
       const close = c.o + (c.c - c.o) * grow;
       const hi = Math.max(c.o, close) + (c.h - Math.max(c.o, c.c)) * grow;
@@ -329,7 +332,7 @@ export class CandleChart {
     ctx.fillRect(x1, y1, x2 - x1, y2 - y1);
     if (o.label) {
       ctx.font = `600 13px ${FONT}`;
-      ctx.fillStyle = o.color || COLORS.paper;
+      ctx.fillStyle = o.color || this.col.paper;
       // label sits on a pill so it stays legible over candles
       const lw = ctx.measureText(o.label).width + 12;
       const ly = o.labelBelow ? y2 + 4 : y1 - 24;
@@ -337,7 +340,7 @@ export class CandleChart {
       ctx.beginPath();
       ctx.roundRect(x1, ly, lw, 20, 6);
       ctx.fill();
-      ctx.fillStyle = o.color || COLORS.paper;
+      ctx.fillStyle = o.color || this.col.paper;
       ctx.textBaseline = "middle";
       ctx.fillText(o.label, x1 + 6, ly + 10.5);
     }
@@ -374,7 +377,7 @@ export class CandleChart {
       ctx.beginPath();
       ctx.roundRect(gx - 14, y - 9, 28, 18, 9);
       ctx.fill();
-      ctx.fillStyle = COLORS.bg;
+      ctx.fillStyle = this.col.bg;
       for (const dy of [-3, 0, 3]) ctx.fillRect(gx - 6, y + dy - 0.75, 12, 1.5);
     }
 
@@ -387,7 +390,7 @@ export class CandleChart {
     ctx.beginPath();
     ctx.roundRect(this.w - this.pad.r + 4, y - 10, tw, 20, 5);
     ctx.fill();
-    ctx.fillStyle = o.tagInk || COLORS.bg;
+    ctx.fillStyle = o.tagInk || this.col.bg;
     ctx.textBaseline = "middle";
     ctx.fillText(tag, this.w - this.pad.r + 11, y + 0.5);
 
@@ -465,6 +468,31 @@ export class CandleChart {
     ctx.beginPath();
     pts.forEach((q, k) => (k ? ctx.lineTo(this.x(q.i), this.y(q.p)) : ctx.moveTo(this.x(q.i), this.y(q.p))));
     ctx.stroke();
+    ctx.restore();
+  }
+
+  _drawTrades(o) {
+    // small triangles: buys point up under the candle, sells point down above it
+    const { ctx } = this;
+    const s = Math.max(5, Math.min(9, this.slot() * 0.45));
+    ctx.save();
+    ctx.globalAlpha = o.alpha;
+    for (const t of o.points) {
+      if (t.i >= this.visible - 0.2) continue;
+      const c = this.candles[t.i];
+      const x = this.x(t.i);
+      const buy = t.side === "buy";
+      const y = buy ? this.y(c.l) + s + 4 : this.y(c.h) - s - 4;
+      ctx.fillStyle = buy ? o.buy : o.sell;
+      ctx.strokeStyle = o.ring || "rgba(0,0,0,0.35)";
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      if (buy) { ctx.moveTo(x, y - s); ctx.lineTo(x + s, y + s * 0.7); ctx.lineTo(x - s, y + s * 0.7); }
+      else { ctx.moveTo(x, y + s); ctx.lineTo(x + s, y - s * 0.7); ctx.lineTo(x - s, y - s * 0.7); }
+      ctx.closePath();
+      ctx.stroke();
+      ctx.fill();
+    }
     ctx.restore();
   }
 
