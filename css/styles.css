@@ -18,6 +18,7 @@
 }
 
 :root {
+  color-scheme: dark;
   --navy-950: #040d1a;
   --navy-900: #071426;
   --navy-800: #0c1f38;
