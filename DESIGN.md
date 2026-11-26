@@ -152,6 +152,12 @@ Numbered rows that mirror the scene's in-scene steps; the current row is gold-ti
 ### Chart stage and engine
 `CandleChart` draws candles from waypoint-generated OHLC data and animates them printing left to right. Overlays: horizontal lines (optionally draggable, with grip and price tag), zones, callout markers, touch rings, paths (moving averages). Optional ghost mode draws not-yet-printed candles faintly so the full path is hinted.
 
+### Content slide template (light, scenes 03 onward)
+- Chrome: emerald corner with gold edge, the SMISHA lockup, a two-tone Source Serif title (deep green, then bronze), a small source note top-right, and the emerald-and-gold ribbon along the bottom.
+- Cards: emerald gradient panels ringed in gold (2px #f1cf7c plus a soft outer glow); cream cards (#fffaf2) with the same gold ring where a chart needs a light ground.
+- Step reveal: elements tagged `data-step` wait faded and desaturated, then rise into place when the presenter reaches that step; numbers count up.
+- Teaching colours stay semantic: green #1f9d6b / red #d64545 for up and down candles on light cards; mint #7fd6a4 and gold #f1cf7c on emerald.
+
 ### Quote slide parts (scene 02)
 - **Lockup:** bull mark and SMISHA wordmark, a thin divider, then "SHARE MARKET CLASSES" in tracked Archivo caps.
 - **Quote:** Source Serif ~420 weight between gold hairline rules with gold quote marks.

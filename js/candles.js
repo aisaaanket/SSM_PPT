@@ -434,10 +434,11 @@ export class CandleChart {
     ctx.arc(x, y, 3.5, 0, Math.PI * 2);
     ctx.fill();
 
-    ctx.font = `700 13px ${FONT}`;
+    const fs = o.size || 13;
+    ctx.font = `700 ${fs}px ${FONT}`;
     const lines = String(o.text).split("\n");
-    const tw = Math.max(...lines.map((l) => ctx.measureText(l).width)) + 16;
-    const th = lines.length * 17 + 8;
+    const tw = Math.max(...lines.map((l) => ctx.measureText(l).width)) + fs * 1.2;
+    const th = lines.length * fs * 1.3 + fs * 0.6;
     let bx = x - tw / 2;
     bx = Math.max(this.pad.l, Math.min(bx, this.w - this.pad.r - tw));
     const by = below ? y + off + 6 : y + off - 6 - th;
@@ -451,7 +452,7 @@ export class CandleChart {
     ctx.globalAlpha = o.alpha;
     ctx.fillStyle = o.ink || o.color;
     ctx.textBaseline = "top";
-    lines.forEach((l, k) => ctx.fillText(l, bx + 8, by + 5 + k * 17));
+    lines.forEach((l, k) => ctx.fillText(l, bx + fs * 0.6, by + fs * 0.35 + k * fs * 1.3));
     ctx.restore();
   }
 

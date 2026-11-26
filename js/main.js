@@ -2,10 +2,15 @@
 
 import title from "./scenes/title.js";
 import patience from "./scenes/patience.js";
+import reality from "./scenes/reality.js";
+import regulators from "./scenes/regulators.js";
+import markets from "./scenes/markets.js";
+import cash from "./scenes/cash.js";
+import reversal from "./scenes/reversal.js";
 import doubleBottom from "./scenes/double-bottom.js";
 import supportResistance from "./scenes/support-resistance.js";
 
-const MODULES = { title, patience, "double-bottom": doubleBottom, "support-resistance": supportResistance };
+const MODULES = { title, patience, reality, regulators, markets, cash, reversal, "double-bottom": doubleBottom, "support-resistance": supportResistance };
 
 const sections = [...document.querySelectorAll(".scene")];
 const scenes = sections.map((el, index) => {
